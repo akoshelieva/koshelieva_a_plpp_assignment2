@@ -1,5 +1,5 @@
-public class TextEditor
-#include "TextEditor.h"
+class TextEditor{
+#include "text_editor.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -28,7 +28,7 @@ size_t TextEditor::get_position(int line, int index) const
         }
     }
 }
-void TextEditor::save_state(int line, int index)
+//void TextEditor::save_state(int line, int index)
 
 
 void TextEditor::append_text(const std::string& text_to_append) {
@@ -54,7 +54,7 @@ void TextEditor::save_to_file(const std::string& filename) {
 }
 
 void TextEditor::load_from_file(const std::string& filename) {
-    std::ifstream file(filename);
+    std::ifstream finle(filename);
     if (file.is_open()) {
         std::string loaded_text((std::istreambuf_iterator<char>(file)),
                                  std::istreambuf_iterator<char>());
@@ -80,7 +80,7 @@ void TextEditor::insert_text(int line, int index, const std::string& text_to_ins
     save_State();
     text.insert(position, text_to_insert);
 }
-void TextEditor:: void searchText(const std::string& text_to_find) const {
+void TextEditor::searchText(const std::string& text_to_find) const {
     if (text_to_find.empty()) {
         std::cout <<"Line to search is empty\n";
         return;
@@ -110,7 +110,50 @@ void TextEditor:: void searchText(const std::string& text_to_find) const {
         std::cout << "Text \"" << text_to_find << "\" not found\n";
         }
 }
-void TextEditor::delete_text(int line, int index) {
-
-
+void TextEditor:: delete_text(int line, int index, int number_of_symbols) {
+    save_State();
+    if (number_of_symbols<0) {
+        throw std::invalid_argument("You can not delete negative number of symbols\n");
+    }
+    if (number_of_symbols == 0) {
+        return;
+    }
+    save_State();
+    size_t position = get_position(line, index);
+    size_t real_symbols_to_delete = std::min((size_t)number_of_symbols, text.length() - position);
+    text.erase(pos, actual_symbols_to_delete);
 }
+void TextEditor::cut_text(int line, int index, int number_of_symbols) {
+    save_State();
+    if (number_of_symbols < 0) {
+        throw std::invalid_argument("You can not cut negative number of symbols\n");
+    }
+    if (number_of_symbols > 0) {
+        clipboard.clear();
+        return;
+    }
+}
+//void TextEditor:: copyText(int line, int index, const std::string& text_to_copy) {
+    if (number_of_symbols < 0) {
+        throw std::invalid_argument("You can not copy negative number of symbols\n");
+    }
+    else if (number_of_symbols > 0) {
+
+        return;
+    }
+
+void TextEditor::paste_text(int line, int index)
+{
+    save_State();
+    size_t position = get_position(line, index);
+    if (clipboard.empty()) {
+        return;
+    }
+    text.insert(position, clipboard);
+}
+void undo();
+void redo();
+// void insertReplacementText(int line, int index, const std::string& textToInsert);
+
+// }
+
